@@ -5,6 +5,9 @@ import (
 	"fmt"
 )
 
+var fields []string
+var mysqlConnect sql.Conn
+
 // Element - структура элемента
 type Element struct {
 	ID                uint64     `db:"ID" json:"id"`
@@ -43,6 +46,60 @@ type nullString struct {
 
 type bitrixBool struct {
 	sql.NullString
+}
+
+func init() {
+	fields = []string{
+		"ID",
+		"CODE",
+		"XML_ID ",
+		"NAME",
+		"IBLOCK_ID",
+		"IBLOCK_SECTION_ID",
+		"ACTIVE",
+		"ACTIVE_FROM",
+		"ACTIVE_TO",
+		"SORT",
+		"PREVIEW_PICTURE",
+		"PREVIEW_TEXT",
+		"DETAIL_PICTURE",
+		"DETAIL_TEXT",
+		"SEARCHABLE_CONTENT",
+		"DATE_CREATE",
+		"CREATED_BY",
+		"TIMESTAMP_X",
+		"MODIFIED_BY",
+		"SHOW_COUNTER",
+	}
+
+	mysqlConnect, err := sql.Open("mysql", "magok:NJy5MziaFrF0BBb3@185.175.46.114/magok_tr")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	defer mysqlConnect.Close()
+
+	err = mysqlConnect.Ping()
+	if err != nil {
+		panic(err.Error())
+	}
+
+}
+
+func GetAllElements() ([]*Element, error) {
+	sqlString := "SELECT * FROM `b_iblock_element` ORDER BY `ID` DESC"
+	rows, err := mysqlConnect.Query(sqlString)
+
+	columns, err := rows.Columns()
+	if err != nil {
+		panic(err.Error()) 
+	}
+	values := make([]sql.RawBytes, len(columns))
+	res := make([]Element{}, len(values))
+	elements = 
+	for rows.Next() {
+		elements.append(
+	}
 }
 
 func main() {
